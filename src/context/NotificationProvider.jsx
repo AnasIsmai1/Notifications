@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NotificationContext } from "./Notifications";
 import { CheckCircle, AlertCircle, Info, AlertTriangle, X } from "lucide-react";
@@ -63,13 +63,16 @@ export const NotificationProvider = ({ children }) => {
         return id;
     };
 
-    const notification = (type, message, duration) => {
-        if (typeof type === 'string' && message === undefined) {
+    const notification = (type, message, obj) => {
+        if (typeof type === 'string' && message === undefined && obj == undefined) {
+            message = type;
+            type = 'default';
+        } else if (typeof type === 'string' && typeof message === 'object') {
+            obj = message
             message = type;
             type = 'default';
         }
-
-        return addNotification(type, message, duration);
+        return addNotification(type, message, obj.duration);
     };
 
     notification.success = (message, duration) => notification('success', message, duration);
